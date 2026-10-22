@@ -31,6 +31,7 @@ import { ProgressBar } from '@/components/ui/ProgressBar'
 import { TickerRow } from '@/components/ui/TickerRow'
 import { ScrollReveal } from '@/components/ui/ScrollReveal'
 import { RegionEmblem, RegionWatermark } from '@/components/ui/RegionWatermark'
+import { BrokerLogo } from '@/components/ui/BrokerLogo'
 import { MarketChart } from '@/components/charts/MarketChart'
 
 export const LandingPage: React.FC = () => {
@@ -289,7 +290,7 @@ export const LandingPage: React.FC = () => {
               </nav>
             </div>
 
-            {/* Bottom Action Buttons */}
+            {/* Bottom Action Button */}
             <div className="pt-4 pb-[max(12px,env(safe-area-inset-bottom))] border-t border-[rgba(255,255,255,0.08)] space-y-2.5">
               <Button
                 variant="primary"
@@ -301,17 +302,6 @@ export const LandingPage: React.FC = () => {
                 }}
               >
                 Start Learning Free <ArrowRight size={16} strokeWidth={1.5} />
-              </Button>
-              <Button
-                variant="secondary"
-                size="md"
-                fullWidth
-                onClick={() => {
-                  setMobileMenuOpen(false)
-                  navigate('/platforms')
-                }}
-              >
-                Explore Platforms
               </Button>
               <p className="text-center font-sans text-[11px] text-text-tertiary pt-0.5">
                 No account needed · Progress saved locally
@@ -405,81 +395,88 @@ export const LandingPage: React.FC = () => {
           </div>
 
           {/* RIGHT COLUMN: HERO VISUAL (40% -> 5 of 12 cols) */}
-          <div className="lg:col-span-5 relative py-6">
-            {/* Large Radial Gold Glow (8%) Behind Chart */}
+          <div className="lg:col-span-5 relative py-4">
+            {/* Subtle Radial Gold Glow Behind Chart */}
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-0 -m-10 rounded-full bg-[radial-gradient(circle,rgba(201,168,76,0.12)_0%,transparent_68%)]"
+              className="pointer-events-none absolute inset-0 -m-8 rounded-full bg-[radial-gradient(circle,rgba(201,168,76,0.08)_0%,transparent_68%)]"
             />
 
-            {/* Decorative barely-visible Playfair ticker watermark (6% opacity) */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none select-none absolute -bottom-6 left-0 right-0 text-center font-serif font-bold text-[22px] sm:text-[26px] tracking-[6px] text-text-primary opacity-[0.06]"
-            >
-              AAPL TSLA AMZN NVDA MSFT
-            </div>
+            <div className="relative">
+              {/* Main Dark Obsidian Terminal Card */}
+              <div className="terminal-obsidian-card relative p-6 sm:p-7">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <span className="block font-sans text-[10px] font-bold uppercase tracking-[2px] text-gold-base">
+                      S&amp;P 500 BENCHMARK
+                    </span>
+                    <span className="font-serif text-[26px] font-semibold text-text-primary">
+                      5,784.15
+                    </span>
+                  </div>
+                </div>
 
-            {/* Main Glass Card (Tier 3, radius 24px, gold edge) */}
-            <GlassCard tier={3} goldEdge className="relative p-6 sm:p-7">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <span className="block font-sans text-[10px] font-bold uppercase tracking-[2px] text-gold-base">
-                    S&P 500 BENCHMARK
-                  </span>
-                  <span className="font-serif text-[26px] font-semibold text-text-primary">
-                    5,784.15
-                  </span>
+                <div className="relative">
+                  {/* Floating Pill Inside Chart Area */}
+                  <div className="glass-overlay-surface rounded-[12px] px-3 py-1.5 !border-[rgba(201,168,76,0.38)] absolute top-3 right-4 sm:right-6 z-10 pointer-events-none">
+                    <span className="font-sans text-[12px] font-semibold text-gold-light">
+                      AAPL +2.4% ↑
+                    </span>
+                  </div>
+
+                  <MarketChart
+                    data={marketData.chartSeries['1M']}
+                    height={230}
+                    showAxes={true}
+                  />
+                </div>
+
+                <div className="mt-3 pt-3 border-t border-[rgba(255,255,255,0.07)] flex items-center justify-between text-[11px] font-sans text-text-tertiary">
+                  <span>1M Upward Trend</span>
+                  <span>15-min delayed snapshot</span>
                 </div>
               </div>
 
-              <div className="relative">
-                {/* Floating Tooltip Inside Chart Area */}
-                <div className="glass-tier-3 !rounded-[12px] px-3 py-1.5 border border-[rgba(201,168,76,0.35)] absolute top-3 right-6 z-10 pointer-events-none">
-                  <span className="font-sans text-[12px] font-semibold text-gold-light">
-                    AAPL +2.4% ↑
-                  </span>
+              {/* Floating Hero Card 1 (top-left) */}
+              <div className="hidden sm:flex items-center gap-2.5 glass-overlay-surface rounded-[12px] px-3.5 py-2.5 absolute -top-3 -left-4 animate-float-1 z-20">
+                <div className="w-6 h-6 rounded-full bg-[rgba(74,222,128,0.14)] border border-[rgba(74,222,128,0.3)] flex items-center justify-center text-[10px] font-bold text-positive">
+                  A
                 </div>
-
-                <MarketChart
-                  data={marketData.chartSeries['1M']}
-                  height={230}
-                  showAxes={true}
-                />
+                <span className="font-sans text-[12px] font-semibold text-text-primary">
+                  AAPL $189.40 <span className="text-positive">▲ 2.4%</span>
+                </span>
               </div>
 
-              <div className="mt-3 pt-3 border-t border-[rgba(255,255,255,0.06)] flex items-center justify-between text-[11px] font-sans text-text-tertiary">
-                <span>1M Upward Trend</span>
-                <span>15-min delayed snapshot</span>
+              {/* Floating Hero Card 2 (bottom-right) */}
+              <div className="hidden sm:flex items-center gap-2.5 glass-overlay-surface rounded-[12px] px-3.5 py-2.5 absolute -bottom-3 -right-3 animate-float-2 z-20">
+                <div className="w-6 h-6 rounded-full bg-[rgba(248,113,113,0.14)] border border-[rgba(248,113,113,0.3)] flex items-center justify-center text-[10px] font-bold text-negative">
+                  T
+                </div>
+                <span className="font-sans text-[12px] font-semibold text-text-primary">
+                  TSLA $242.10 <span className="text-negative">▼ 1.2%</span>
+                </span>
               </div>
-            </GlassCard>
 
-            {/* Floating Hero Card 1 (top-left) */}
-            <div className="hidden sm:flex items-center gap-2.5 glass-tier-3 !rounded-[12px] px-3.5 py-2.5 absolute -top-2 -left-4 animate-float-1 z-20">
-              <div className="w-6 h-6 rounded-full bg-[rgba(74,222,128,0.14)] border border-[rgba(74,222,128,0.3)] flex items-center justify-center text-[10px] font-bold text-positive">
-                A
+              {/* Floating Hero Card 3 (top-right) */}
+              <div className="hidden sm:flex items-center gap-2 glass-overlay-surface !border-[rgba(201,168,76,0.35)] rounded-[12px] px-3.5 py-2 absolute -top-3 -right-3 animate-float-3 z-20">
+                <BarChart3 size={15} strokeWidth={1.5} className="text-gold-base" />
+                <span className="font-sans text-[12px] font-semibold text-gold-light">
+                  S&amp;P 500 ▲ 0.8%
+                </span>
               </div>
-              <span className="font-sans text-[12px] font-semibold text-text-primary">
-                AAPL $189.40 <span className="text-positive">▲ 2.4%</span>
-              </span>
             </div>
 
-            {/* Floating Hero Card 2 (bottom-right) */}
-            <div className="hidden sm:flex items-center gap-2.5 glass-tier-3 !rounded-[12px] px-3.5 py-2.5 absolute -bottom-2 -right-3 animate-float-2 z-20">
-              <div className="w-6 h-6 rounded-full bg-[rgba(248,113,113,0.14)] border border-[rgba(248,113,113,0.3)] flex items-center justify-center text-[10px] font-bold text-negative">
-                T
-              </div>
-              <span className="font-sans text-[12px] font-semibold text-text-primary">
-                TSLA $242.10 <span className="text-negative">▼ 1.2%</span>
-              </span>
-            </div>
-
-            {/* Floating Hero Card 3 (top-right) */}
-            <div className="hidden sm:flex items-center gap-2 glass-tier-3 glass-gold-edge !rounded-[12px] px-3.5 py-2 absolute -top-2 -right-3 animate-float-3 z-20">
-              <BarChart3 size={15} strokeWidth={1.5} className="text-gold-base" />
-              <span className="font-sans text-[12px] font-semibold text-gold-light">
-                S&P 500 ▲ 0.8%
-              </span>
+            {/* Clearly Visible Ticker Strip Directly Under Terminal Card */}
+            <div className="relative z-10 mt-5 sm:mt-6 flex items-center justify-center gap-2 sm:gap-3 flex-wrap">
+              {(['AAPL', 'TSLA', 'NVDA', 'AMZN', 'MSFT'] as const).map((ticker) => (
+                <Link
+                  key={ticker}
+                  to="/market"
+                  className="px-3 py-1 rounded-full bg-[#13131F]/90 border border-[rgba(201,168,76,0.24)] hover:border-gold-base font-sans text-[11px] sm:text-[12px] font-semibold tracking-[1.6px] text-text-accent hover:text-gold-light transition-colors"
+                >
+                  {ticker}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
@@ -655,15 +652,10 @@ export const LandingPage: React.FC = () => {
               <Link
                 key={`${broker.id}-${idx}`}
                 to={`/platforms/${broker.region}/${broker.id}`}
-                className="group inline-flex items-center gap-3 px-5 py-2.5 rounded-full glass-tier-2 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 hover:border-gold-border transition-all duration-200"
+                className="group inline-flex items-center gap-3 px-4 py-2.5 rounded-full glass-tier-2 opacity-90 hover:opacity-100 hover:border-gold-border transition-all duration-200"
               >
-                <span
-                  style={{ backgroundColor: `${broker.accentColor}22`, color: broker.accentColor }}
-                  className="w-6 h-6 rounded-full flex items-center justify-center font-sans text-[10px] font-bold border border-[rgba(255,255,255,0.12)]"
-                >
-                  {broker.shortCode}
-                </span>
-                <span className="font-sans text-[13px] font-medium text-text-primary">
+                <BrokerLogo brokerId={broker.id} name={broker.name} size="sm" />
+                <span className="font-sans text-[13px] font-medium text-text-primary group-hover:text-gold-light transition-colors">
                   {broker.name}
                 </span>
               </Link>

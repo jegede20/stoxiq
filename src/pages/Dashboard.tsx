@@ -22,6 +22,7 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { ProgressBar } from '@/components/ui/ProgressBar'
 import { RegionEmblem } from '@/components/ui/RegionWatermark'
+import { BrokerLogo } from '@/components/ui/BrokerLogo'
 import { Sparkline } from '@/components/charts/Sparkline'
 
 function getGreeting(): string {
@@ -258,14 +259,9 @@ export const Dashboard: React.FC = () => {
                     <Link
                       key={b.id}
                       to={`/platforms/${region}/${b.id}`}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.08)] hover:border-gold-border text-[11px] font-sans text-text-primary transition-colors"
+                      className="inline-flex items-center gap-1.5 pl-1.5 pr-2.5 py-1 rounded-full bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.08)] hover:border-gold-border text-[11px] font-sans text-text-primary transition-colors"
                     >
-                      <span
-                        style={{ color: b.accentColor }}
-                        className="font-bold text-[10px]"
-                      >
-                        {b.shortCode}
-                      </span>
+                      <BrokerLogo brokerId={b.id} name={b.name} size="xs" />
                       {b.name}
                     </Link>
                   ))}

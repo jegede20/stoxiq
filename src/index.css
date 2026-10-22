@@ -52,6 +52,7 @@
     color: var(--text-secondary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
@@ -61,6 +62,16 @@
     color: var(--text-secondary);
     font-family: 'Inter', system-ui, sans-serif;
     overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Prevent default white SVG focus rectangle when tapping Recharts charts on mobile */
+  .recharts-wrapper,
+  .recharts-wrapper *,
+  .recharts-surface,
+  .recharts-surface:focus,
+  .recharts-wrapper:focus {
+    outline: none !important;
   }
 
   #root {
@@ -136,6 +147,18 @@
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.10);
     box-shadow: 0 20px 56px rgba(0, 0, 0, 0.68), 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  }
+
+  /* Deep dark obsidian terminal card — avoids washed-out milky tint over glow backgrounds */
+  .terminal-obsidian-card {
+    background: linear-gradient(180deg, rgba(19, 19, 31, 0.96) 0%, rgba(11, 11, 18, 0.98) 100%);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border: 1px solid rgba(201, 168, 76, 0.30);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.62),
+      0 1px 0 rgba(255, 255, 255, 0.06) inset,
+      0 0 24px rgba(201, 168, 76, 0.08);
+    border-radius: 24px;
   }
 
   .glass-gold-edge {

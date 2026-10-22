@@ -6,6 +6,7 @@ import { BROKERS, REGIONS_META, type BrokerData } from '@/data/brokers'
 import { GlassCard } from '@/components/ui/GlassCard'
 import { Badge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
+import { BrokerLogo } from '@/components/ui/BrokerLogo'
 import { RegionEmblem } from '@/components/ui/RegionWatermark'
 import { cn } from '@/lib/utils'
 
@@ -137,15 +138,7 @@ export const RegionPage: React.FC = () => {
                     {/* TOP: logo pill (40px) + broker name (Playfair 20px) + country + founded + beginner tag */}
                     <div className="flex items-start justify-between gap-3 mb-5">
                       <div className="flex items-center gap-3.5">
-                        <div
-                          style={{
-                            backgroundColor: `${broker.accentColor}1E`,
-                            color: broker.accentColor,
-                          }}
-                          className="w-[40px] h-[40px] rounded-[12px] border border-[rgba(255,255,255,0.12)] flex items-center justify-center font-sans text-[13px] font-bold shrink-0"
-                        >
-                          {broker.shortCode}
-                        </div>
+                        <BrokerLogo brokerId={broker.id} name={broker.name} size="md" />
                         <div>
                           <h2 className="font-serif text-[21px] font-semibold text-text-primary leading-tight">
                             {broker.name}

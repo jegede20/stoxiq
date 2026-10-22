@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   Search,
@@ -36,9 +36,33 @@ export const MarketSnapshot: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [sortField, setSortField] = useState<SortField>('volume')
   const [sortAsc, setSortAsc] = useState(false)
-  const [hoveredIndexId, setHoveredIndexId] = useState<string | null>(null)
+  const [pinnedIndexId, setPinnedIndexId] = useState<string | null>(null)
   const [selectedStock, setSelectedStock] = useState<StockQuoteItem | null>(null)
   const [tickPulse, setTickPulse] = useState(false)
+  const indicesGridRef = useRef<HTMLDivElement | null>(null)
+  const selectedCardRef = useRef<HTMLDivElement | null>(null)
+
+  useEffect(() => {
+    if (!pinnedIndexId) return
+    const handleOutside = (e: MouseEvent | TouchEvent) => {
+      if (indicesGridRef.current && !indicesGridRef.current.contains(e.target as Node)) {
+        setPinnedIndexId(null)
+      }
+    }
+    document.addEventListener('mousedown', handleOutside)
+    document.addEventListener('touchstart', handleOutside, { passive: true })
+    return () => {
+      document.removeEventListener('mousedown', handleOutside)
+      document.removeEventListener('touchstart', handleOutside)
+    }
+  }, [pinnedIndexId])
+
+  const handleSelectMover = (stock: StockQuoteItem) => {
+    setSelectedStock(stock)
+    setTimeout(() => {
+      selectedCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    }, 60)
+  }
 
   useEffect(() => {
     setTimeRange(preferences.defaultTimeRange)
@@ -143,29 +167,46 @@ export const MarketSnapshot: React.FC = () => {
         )}
       </div>
 
-      {/* INDICES ROW (4 Compact Cards with Hover Plain-English Tooltip) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+      {/* INDICES ROW (4 Compact Cards with Plain-English Explanation) */}
+      <div
+        ref={indicesGridRef}
+        className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 items-start"
+      >
         {market.indices.map((idx) => {
           const positive = idx.changePct >= 0
-          const showTip = hoveredIndexId === idx.id
+          const showTip = pinnedIndexId === idx.id
 
           return (
-            <div
-              key={idx.id}
-              className="relative"
-              onMouseEnter={() => setHoveredIndexId(idx.id)}
-              onMouseLeave={() => setHoveredIndexId(null)}
-            >
-              <GlassCard tier={2} interactive className="p-5 space-y-3">
+            <div key={idx.id} className="relative">
+              <GlassCard
+                tier={2}
+                goldEdge={showTip}
+                interactive
+                onClick={() =>
+                  setPinnedIndexId((curr) => (curr === idx.id ? null : idx.id))
+                }
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    setPinnedIndexId((curr) => (curr === idx.id ? null : idx.id))
+                  }
+                }}
+                className="p-5 space-y-3 cursor-pointer select-none"
+              >
                 <div className="flex items-center justify-between">
-                  <button
-                    type="button"
-                    onClick={() => setHoveredIndexId(showTip ? null : idx.id)}
-                    className="inline-flex items-center gap-1.5 font-sans text-[12px] font-bold uppercase tracking-[1.8px] text-gold-base cursor-help"
-                  >
+                  <span className="inline-flex items-center gap-1.5 font-sans text-[12px] font-bold uppercase tracking-[1.8px] text-gold-base">
                     <span>{idx.name}</span>
-                    <Info size={13} strokeWidth={1.5} className="text-text-tertiary" />
-                  </button>
+                    <Info
+                      size={13}
+                      strokeWidth={1.5}
+                      className={cn(
+                        'transition-colors',
+                        showTip ? 'text-gold-light' : 'text-text-tertiary'
+                      )}
+                    />
+                  </span>
                   <span
                     className={cn(
                       'font-sans text-[12px] font-semibold tabular-nums',
@@ -188,13 +229,26 @@ export const MarketSnapshot: React.FC = () => {
                 />
               </GlassCard>
 
-              {/* Plain-English Index Explanation Tooltip */}
+              {/* Plain-English Index Explanation — expands cleanly in-flow below the clicked index card */}
               {showTip && (
-                <div className="absolute z-40 left-0 right-0 top-full mt-2 glass-tier-3 !rounded-[14px] p-4 border border-[rgba(201,168,76,0.32)] shadow-glass-3 pointer-events-none">
-                  <span className="block font-sans text-[10px] font-bold uppercase tracking-[1.8px] text-gold-base mb-1">
-                    WHAT IS {idx.name}?
-                  </span>
-                  <p className="font-sans text-[12.5px] leading-[1.6] text-text-secondary">
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="mt-2.5 glass-overlay-surface rounded-[14px] p-4 !border-[rgba(201,168,76,0.38)] animate-page-in"
+                >
+                  <div className="flex items-center justify-between gap-2 mb-1.5">
+                    <span className="block font-sans text-[10px] font-bold uppercase tracking-[1.8px] text-gold-base">
+                      WHAT IS {idx.name}?
+                    </span>
+                    <button
+                      type="button"
+                      aria-label={`Close ${idx.name} explanation`}
+                      onClick={() => setPinnedIndexId(null)}
+                      className="text-text-tertiary hover:text-text-primary p-0.5 transition-colors"
+                    >
+                      <X size={14} strokeWidth={1.5} />
+                    </button>
+                  </div>
+                  <p className="font-sans text-[13px] leading-[1.65] text-text-primary/90">
                     {idx.explanation}
                   </p>
                 </div>
@@ -323,7 +377,7 @@ export const MarketSnapshot: React.FC = () => {
                   price={stock.price}
                   changePct={stock.changePct}
                   flashTick={tickPulse}
-                  onClick={() => setSelectedStock(stock)}
+                  onClick={() => handleSelectMover(stock)}
                 />
               ))}
             </div>
@@ -361,14 +415,13 @@ export const MarketSnapshot: React.FC = () => {
 
         {/* Selected Educational Tooltip / Card */}
         {selectedStock && (
-          <GlassCard
-            tier={3}
-            goldEdge
-            className="p-6 !rounded-[18px] animate-page-in space-y-4"
+          <div
+            ref={selectedCardRef}
+            className="terminal-obsidian-card p-6 !rounded-[18px] animate-page-in space-y-4 scroll-mt-24"
           >
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-full bg-gold-fill border border-gold-border flex items-center justify-center font-sans text-[13px] font-bold text-gold-light">
+                <div className="w-11 h-11 rounded-full bg-gold-fill border border-gold-border flex items-center justify-center font-sans text-[13px] font-bold text-gold-light shrink-0">
                   {selectedStock.ticker.slice(0, 3)}
                 </div>
                 <div>
@@ -395,13 +448,13 @@ export const MarketSnapshot: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-sans text-[14px] leading-[1.75]">
-              <div className="p-4 rounded-[12px] bg-[rgba(10,10,15,0.45)] border border-[rgba(255,255,255,0.06)]">
+              <div className="p-4 rounded-[12px] bg-[rgba(10,10,15,0.55)] border border-[rgba(255,255,255,0.07)]">
                 <span className="block font-sans text-[10px] font-bold uppercase tracking-[1.6px] text-gold-base mb-1">
                   WHAT THEY DO
                 </span>
                 <p className="text-text-secondary">{selectedStock.whatTheyDo}</p>
               </div>
-              <div className="p-4 rounded-[12px] bg-[rgba(10,10,15,0.45)] border border-[rgba(255,255,255,0.06)]">
+              <div className="p-4 rounded-[12px] bg-[rgba(10,10,15,0.55)] border border-[rgba(255,255,255,0.07)]">
                 <span className="block font-sans text-[10px] font-bold uppercase tracking-[1.6px] text-gold-base mb-1">
                   EDUCATIONAL LENS
                 </span>
@@ -409,7 +462,7 @@ export const MarketSnapshot: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-1">
+            <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
               <span className="font-sans text-[12px] text-text-tertiary">
                 Educational company profile · Not a buy/sell recommendation
               </span>
@@ -420,7 +473,7 @@ export const MarketSnapshot: React.FC = () => {
                 Learn more: {selectedStock.lessonLabel} <ArrowRight size={14} strokeWidth={1.5} />
               </Link>
             </div>
-          </GlassCard>
+          </div>
         )}
 
         {/* Sortable Table */}

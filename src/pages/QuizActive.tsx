@@ -127,7 +127,7 @@ export const QuizActive: React.FC = () => {
       />
 
       {/* QUIZ TOP BAR */}
-      <header className="relative z-20 h-[68px] glass-tier-2 !rounded-none border-t-0 border-x-0 border-b border-[rgba(255,255,255,0.08)] px-4 sm:px-8 flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-30 h-[68px] glass-chrome-bar border-b border-[rgba(255,255,255,0.09)] px-4 sm:px-8 flex items-center justify-between gap-4">
         <button
           type="button"
           onClick={() => navigate('/quiz')}
@@ -164,7 +164,7 @@ export const QuizActive: React.FC = () => {
               const isCorrectOption = Boolean(opt.correct)
 
               let cardClasses =
-                'glass-tier-2 border border-[rgba(255,255,255,0.10)] hover:bg-[rgba(255,255,255,0.10)] hover:border-gold-border hover:-translate-y-0.5'
+                'bg-[rgba(255,255,255,0.04)] rounded-[14px] border border-[rgba(255,255,255,0.10)] hover:bg-[rgba(255,255,255,0.08)] hover:border-gold-border hover:-translate-y-0.5'
               let circleClasses =
                 'border border-[rgba(255,255,255,0.18)] text-text-secondary'
 

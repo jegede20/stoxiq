@@ -16,6 +16,7 @@ import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Button } from '@/components/ui/Button'
 import { ProgressBar } from '@/components/ui/ProgressBar'
 import { Callout } from '@/components/ui/Callout'
+import { BrokerLogo } from '@/components/ui/BrokerLogo'
 import { cn } from '@/lib/utils'
 
 export const BrokerDetail: React.FC = () => {
@@ -67,15 +68,7 @@ export const BrokerDetail: React.FC = () => {
       <GlassCard tier={2} goldEdge className="p-7 sm:p-10">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="flex items-start sm:items-center gap-5">
-            <div
-              style={{
-                backgroundColor: `${broker.accentColor}20`,
-                color: broker.accentColor,
-              }}
-              className="w-[64px] h-[64px] rounded-[18px] border border-[rgba(255,255,255,0.14)] flex items-center justify-center font-serif text-[24px] font-bold shrink-0"
-            >
-              {broker.shortCode}
-            </div>
+            <BrokerLogo brokerId={broker.id} name={broker.name} size="lg" />
             <div>
               <span className="block font-sans text-[11px] font-bold uppercase tracking-[2px] text-gold-base mb-1">
                 {broker.country} · {broker.regulated} REGULATED

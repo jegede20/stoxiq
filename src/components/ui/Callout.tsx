@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Lightbulb, HelpCircle, Bookmark, AlertTriangle } from 'lucide-react'
 import { KEY_TERMS } from '@/data/curriculum'
 import { cn } from '@/lib/utils'
@@ -70,24 +70,58 @@ interface KeyTermPillProps {
 
 export const KeyTermPill: React.FC<KeyTermPillProps> = ({ term, definition, children }) => {
   const [open, setOpen] = useState(false)
+  const [offsetX, setOffsetX] = useState(0)
+  const wrapRef = useRef<HTMLSpanElement | null>(null)
+
+  useEffect(() => {
+    if (!open) return
+    if (wrapRef.current && typeof window !== 'undefined') {
+      const rect = wrapRef.current.getBoundingClientRect()
+      const halfTip = 132
+      const center = rect.left + rect.width / 2
+      const minX = 12 + halfTip
+      const maxX = window.innerWidth - 12 - halfTip
+      if (center < minX) setOffsetX(minX - center)
+      else if (center > maxX) setOffsetX(maxX - center)
+      else setOffsetX(0)
+    }
+
+    const onOutside = (e: MouseEvent | TouchEvent) => {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', onOutside)
+    document.addEventListener('touchstart', onOutside, { passive: true })
+    return () => {
+      document.removeEventListener('mousedown', onOutside)
+      document.removeEventListener('touchstart', onOutside)
+    }
+  }, [open])
 
   return (
     <span
-      className="relative inline-block"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      ref={wrapRef}
+      className={cn('relative inline-block', open && 'z-50')}
+      onPointerEnter={(e) => {
+        if (e.pointerType === 'mouse') setOpen(true)
+      }}
+      onPointerLeave={(e) => {
+        if (e.pointerType === 'mouse') setOpen(false)
+      }}
     >
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="inline-flex items-center px-2.5 py-0.5 mx-0.5 rounded-full bg-[rgba(201,168,76,0.06)] border border-[rgba(201,168,76,0.30)] font-sans text-[14px] text-text-accent hover:border-gold-base hover:text-gold-light transition-colors cursor-help leading-[1.4]"
+        className="inline-flex items-center px-2.5 py-0.5 mx-0.5 rounded-full bg-[rgba(201,168,76,0.08)] border border-[rgba(201,168,76,0.32)] font-sans text-[14px] text-text-accent hover:border-gold-base hover:text-gold-light transition-colors cursor-help leading-[1.4]"
       >
         {children}
       </button>
       {open && (
         <span
           role="tooltip"
-          className="absolute z-40 bottom-full left-1/2 -translate-x-1/2 mb-2 w-[260px] glass-overlay-surface rounded-[14px] p-3.5 text-left pointer-events-none shadow-glass-3 !border-[rgba(201,168,76,0.32)]"
+          style={{ transform: `translateX(calc(-50% + ${offsetX}px))` }}
+          className="absolute z-50 bottom-full left-1/2 mb-2 w-[264px] glass-overlay-surface rounded-[14px] p-3.5 text-left pointer-events-none shadow-glass-3 !border-[rgba(201,168,76,0.36)]"
         >
           <span className="block font-sans text-[10px] font-bold uppercase tracking-[1.6px] text-gold-base mb-1">
             {term}

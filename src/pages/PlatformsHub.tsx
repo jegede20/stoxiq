@@ -6,6 +6,7 @@ import { ALL_BROKERS_FLAT, REGIONS_META } from '@/data/brokers'
 import { GlassCard } from '@/components/ui/GlassCard'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Badge } from '@/components/ui/Badge'
+import { BrokerLogo } from '@/components/ui/BrokerLogo'
 import { RegionEmblem, RegionWatermark } from '@/components/ui/RegionWatermark'
 
 export const PlatformsHub: React.FC = () => {
@@ -120,15 +121,10 @@ export const PlatformsHub: React.FC = () => {
               <Link
                 key={`${broker.id}-${idx}`}
                 to={`/platforms/${broker.region}/${broker.id}`}
-                className="group inline-flex items-center gap-3 px-5 py-2.5 rounded-full glass-tier-2 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 hover:border-gold-border transition-all duration-200"
+                className="group inline-flex items-center gap-3 px-4 py-2.5 rounded-full glass-tier-2 opacity-90 hover:opacity-100 hover:border-gold-border transition-all duration-200"
               >
-                <span
-                  style={{ backgroundColor: `${broker.accentColor}22`, color: broker.accentColor }}
-                  className="w-6 h-6 rounded-full flex items-center justify-center font-sans text-[10px] font-bold border border-[rgba(255,255,255,0.12)]"
-                >
-                  {broker.shortCode}
-                </span>
-                <span className="font-sans text-[13px] font-medium text-text-primary">
+                <BrokerLogo brokerId={broker.id} name={broker.name} size="sm" />
+                <span className="font-sans text-[13px] font-medium text-text-primary group-hover:text-gold-light transition-colors">
                   {broker.name}
                 </span>
               </Link>
