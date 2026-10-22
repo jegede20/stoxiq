@@ -121,6 +121,23 @@
     }
   }
 
+  /* High-opacity obsidian frosted chrome for sticky headers & mobile tab bars */
+  .glass-chrome-bar {
+    background: linear-gradient(180deg, rgba(15, 15, 26, 0.97) 0%, rgba(10, 10, 15, 0.98) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.55), 0 1px 0 rgba(255, 255, 255, 0.05) inset;
+  }
+
+  /* High-opacity obsidian surface for floating sheets, drawers, modals & tooltips */
+  .glass-overlay-surface {
+    background: linear-gradient(180deg, rgba(22, 22, 36, 0.98) 0%, rgba(13, 13, 22, 0.99) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 20px 56px rgba(0, 0, 0, 0.68), 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  }
+
   .glass-gold-edge {
     border-color: rgba(201, 168, 76, 0.30) !important;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4),

@@ -156,7 +156,7 @@ export const LessonReader: React.FC = () => {
   return (
     <div className="min-h-screen app-shell-bg text-text-secondary">
       {/* LESSON TOP BAR (Sticky — Sidebar hidden in this view) */}
-      <header className="sticky top-0 z-40 h-[64px] glass-tier-2 !rounded-none border-t-0 border-x-0 border-b border-[rgba(255,255,255,0.08)] px-4 sm:px-8 flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-40 h-[64px] glass-chrome-bar border-b border-[rgba(255,255,255,0.09)] px-4 sm:px-8 flex items-center justify-between gap-4">
         <Link
           to={`/learn/${mod.id}`}
           className="inline-flex items-center gap-2 font-sans text-[13px] font-medium text-gold-base hover:text-gold-light transition-colors shrink-0"

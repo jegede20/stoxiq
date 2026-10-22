@@ -13,6 +13,10 @@ import {
   Check,
   BarChart3,
   Sparkles,
+  Home,
+  Brain,
+  Settings as SettingsIcon,
+  ChevronRight,
 } from 'lucide-react'
 import { useProgress } from '@/contexts/ProgressContext'
 import { lessonKeyToRoute } from '@/data/curriculum'
@@ -52,6 +56,20 @@ export const LandingPage: React.FC = () => {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.body.style.overflow = prevOverflow
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [mobileMenuOpen])
 
   useEffect(() => {
     let active = true
@@ -120,9 +138,11 @@ export const LandingPage: React.FC = () => {
       {/* SECTION A: FIXED NAVBAR */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 h-[72px] transition-all duration-300 ${
+          mobileMenuOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        } ${
           scrolled
-            ? 'glass-tier-2 !rounded-none border-t-0 border-x-0 border-b border-[rgba(255,255,255,0.08)]'
-            : 'bg-transparent border-b border-transparent'
+            ? 'glass-chrome-bar border-b border-[rgba(255,255,255,0.09)]'
+            : 'bg-[rgba(10,10,15,0.72)] md:bg-transparent backdrop-blur-md md:backdrop-blur-none border-b border-[rgba(255,255,255,0.05)] md:border-transparent'
         }`}
       >
         <div className="max-w-[1440px] mx-auto h-full px-5 sm:px-8 flex items-center justify-between">
@@ -160,60 +180,144 @@ export const LandingPage: React.FC = () => {
             type="button"
             onClick={() => setMobileMenuOpen(true)}
             aria-label="Open navigation menu"
-            className="md:hidden w-10 h-10 rounded-[12px] border border-[rgba(255,255,255,0.10)] flex items-center justify-center text-text-primary hover:border-gold-border transition-colors"
+            className="md:hidden w-10 h-10 rounded-[12px] bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.12)] flex items-center justify-center text-text-primary hover:border-gold-border transition-colors shrink-0"
           >
             <Menu size={20} strokeWidth={1.5} />
           </button>
         </div>
       </header>
 
-      {/* Mobile Full-Screen Glass Drawer Overlay */}
+      {/* Mobile Full-Screen Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 glass-tier-3 !rounded-none p-6 flex flex-col justify-between md:hidden animate-page-in">
-          <div className="flex items-center justify-between">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation menu"
+          className="fixed inset-0 z-[70] bg-bg-base-0 hero-layered-bg flex flex-col md:hidden overflow-y-auto"
+        >
+          {/* Drawer Top Bar — aligned identically to main navbar */}
+          <div className="h-[72px] shrink-0 px-5 sm:px-8 flex items-center justify-between border-b border-[rgba(255,255,255,0.08)] bg-[rgba(10,10,15,0.92)]">
             <StoxLogo to="/" size="md" showTagline onClick={() => setMobileMenuOpen(false)} />
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
               aria-label="Close navigation menu"
-              className="w-10 h-10 rounded-[12px] border border-[rgba(255,255,255,0.12)] flex items-center justify-center text-text-primary"
+              className="w-10 h-10 rounded-[12px] bg-[rgba(255,255,255,0.05)] border border-[rgba(201,168,76,0.32)] flex items-center justify-center text-text-primary hover:text-gold-base transition-colors shrink-0"
             >
               <X size={20} strokeWidth={1.5} />
             </button>
           </div>
 
-          <nav className="flex flex-col gap-4 my-auto">
-            {[
-              { label: 'Dashboard', to: '/dashboard' },
-              { label: 'Learn Curriculum', to: '/learn' },
-              { label: 'Watch Out For', to: '/risks' },
-              { label: 'Platforms Directory', to: '/platforms' },
-              { label: 'Live Market', to: '/market' },
-              { label: 'Knowledge Quiz', to: '/quiz' },
-              { label: 'Settings', to: '/settings' },
-            ].map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                onClick={() => setMobileMenuOpen(false)}
-                className="font-serif text-[26px] text-text-primary hover:text-gold-base transition-colors py-1.5 border-b border-[rgba(255,255,255,0.06)]"
-              >
-                {item.label}
-              </Link>
-            ))}
-          </nav>
+          {/* Drawer Content */}
+          <div className="flex-1 px-5 sm:px-8 py-5 flex flex-col justify-between gap-5">
+            <div>
+              <div className="font-sans text-[10px] font-bold uppercase tracking-[2px] text-gold-base mb-3 px-1">
+                NAVIGATION
+              </div>
 
-          <Button
-            variant="primary"
-            size="lg"
-            fullWidth
-            onClick={() => {
-              setMobileMenuOpen(false)
-              navigate('/learn')
-            }}
-          >
-            Start Learning Free <ArrowRight size={16} strokeWidth={1.5} />
-          </Button>
+              <nav className="flex flex-col gap-2">
+                {[
+                  {
+                    label: 'Dashboard',
+                    sub: 'Progress overview & learning hub',
+                    to: '/dashboard',
+                    Icon: Home,
+                  },
+                  {
+                    label: 'Learn Curriculum',
+                    sub: '4 modules · 12 beginner lessons',
+                    to: '/learn',
+                    Icon: BookOpen,
+                  },
+                  {
+                    label: 'Watch Out For',
+                    sub: 'Market traps, FOMO & scam red flags',
+                    to: '/risks',
+                    Icon: AlertTriangle,
+                  },
+                  {
+                    label: 'Platforms Directory',
+                    sub: 'Regulated brokers for US, UK & Africa',
+                    to: '/platforms',
+                    Icon: Globe,
+                  },
+                  {
+                    label: 'Live Market',
+                    sub: '15-min delayed indices & stock quotes',
+                    to: '/market',
+                    Icon: BarChart3,
+                  },
+                  {
+                    label: 'Knowledge Quiz',
+                    sub: 'Module tests & Final Challenge',
+                    to: '/quiz',
+                    Icon: Brain,
+                  },
+                  {
+                    label: 'Settings',
+                    sub: 'Region preference & saved data',
+                    to: '/settings',
+                    Icon: SettingsIcon,
+                  },
+                ].map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="group flex items-center justify-between gap-3.5 px-3.5 py-2.5 rounded-[14px] bg-[rgba(255,255,255,0.035)] border border-[rgba(255,255,255,0.08)] hover:border-gold-border active:bg-[rgba(201,168,76,0.08)] transition-all"
+                  >
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <div className="w-9 h-9 rounded-[10px] bg-[rgba(201,168,76,0.08)] border border-[rgba(201,168,76,0.22)] flex items-center justify-center shrink-0">
+                        <item.Icon size={18} strokeWidth={1.5} className="text-gold-base" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="font-serif text-[16px] font-medium text-text-primary leading-snug group-hover:text-gold-light transition-colors">
+                          {item.label}
+                        </div>
+                        <div className="font-sans text-[12px] text-text-secondary truncate">
+                          {item.sub}
+                        </div>
+                      </div>
+                    </div>
+                    <ChevronRight
+                      size={16}
+                      strokeWidth={1.5}
+                      className="text-text-tertiary group-hover:text-gold-base shrink-0 transition-colors"
+                    />
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            {/* Bottom Action Buttons */}
+            <div className="pt-4 pb-[max(12px,env(safe-area-inset-bottom))] border-t border-[rgba(255,255,255,0.08)] space-y-2.5">
+              <Button
+                variant="primary"
+                size="lg"
+                fullWidth
+                onClick={() => {
+                  setMobileMenuOpen(false)
+                  navigate('/learn')
+                }}
+              >
+                Start Learning Free <ArrowRight size={16} strokeWidth={1.5} />
+              </Button>
+              <Button
+                variant="secondary"
+                size="md"
+                fullWidth
+                onClick={() => {
+                  setMobileMenuOpen(false)
+                  navigate('/platforms')
+                }}
+              >
+                Explore Platforms
+              </Button>
+              <p className="text-center font-sans text-[11px] text-text-tertiary pt-0.5">
+                No account needed · Progress saved locally
+              </p>
+            </div>
+          </div>
         </div>
       )}
 

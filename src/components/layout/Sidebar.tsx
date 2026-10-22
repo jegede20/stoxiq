@@ -41,13 +41,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       {isOpen && (
         <div
           onClick={onClose}
-          className="fixed inset-0 z-40 bg-[#0A0A0F]/70 backdrop-blur-xs lg:hidden"
+          className="fixed inset-0 z-40 bg-[#0A0A0F]/80 backdrop-blur-sm lg:hidden"
         />
       )}
 
       <aside
         className={cn(
-          'fixed top-0 left-0 bottom-0 z-50 w-[260px] glass-tier-1 !rounded-none border-y-0 border-l-0 border-r border-[rgba(255,255,255,0.08)] flex flex-col overflow-hidden transition-transform duration-300 ease-out',
+          'fixed top-0 left-0 bottom-0 z-50 w-[260px] bg-[#0D0D16]/[0.98] lg:bg-[rgba(15,15,26,0.92)] backdrop-blur-[20px] border-r border-[rgba(255,255,255,0.08)] flex flex-col overflow-hidden transition-transform duration-300 ease-out',
           'hidden md:flex',
           isOpen ? 'md:translate-x-0' : 'md:-translate-x-full lg:translate-x-0'
         )}

@@ -10,14 +10,12 @@ import {
   Share2,
   MessageSquareWarning,
   Check,
-  KeyRound,
 } from 'lucide-react'
 import { useProgress } from '@/contexts/ProgressContext'
 import { REGIONS_META } from '@/data/brokers'
 import { GlassCard } from '@/components/ui/GlassCard'
 import { Eyebrow } from '@/components/ui/Eyebrow'
 import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
 import { RegionEmblem } from '@/components/ui/RegionWatermark'
 import { cn } from '@/lib/utils'
 
@@ -35,9 +33,6 @@ export const Settings: React.FC = () => {
 
   const [resetModalOpen, setResetModalOpen] = useState(false)
   const [feedbackBanner, setFeedbackBanner] = useState<string | null>(null)
-  const [avKey, setAvKey] = useState<string>(
-    () => (typeof window !== 'undefined' && localStorage.getItem('stoxiq_av_key')) || ''
-  )
 
   const completedLessons = getCompletedLessonsCount()
   const quizzesTaken = getTakenQuizzesCount()
@@ -46,19 +41,6 @@ export const Settings: React.FC = () => {
   const showToast = (msg: string) => {
     setFeedbackBanner(msg)
     setTimeout(() => setFeedbackBanner(null), 3500)
-  }
-
-  const handleSaveApiKey = () => {
-    const trimmed = avKey.trim()
-    if (trimmed) {
-      localStorage.setItem('stoxiq_av_key', trimmed)
-      sessionStorage.removeItem('stoxiq_market_cache_v1')
-      showToast('Alpha Vantage API key saved locally in your browser.')
-    } else {
-      localStorage.removeItem('stoxiq_av_key')
-      sessionStorage.removeItem('stoxiq_market_cache_v1')
-      showToast('Cleared custom API key — reverted to default tier.')
-    }
   }
 
   const handleShare = async () => {
@@ -107,7 +89,7 @@ export const Settings: React.FC = () => {
       <GlassCard tier={2} className="p-6 sm:p-8 space-y-5">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-[12px] bg-gold-fill border border-gold-border flex items-center justify-center">
+            <div className="w-10 h-10 rounded-[12px] bg-gold-fill border border-gold-border flex items-center justify-center shrink-0">
               <Globe size={20} strokeWidth={1.5} className="text-gold-base" />
             </div>
             <div>
@@ -160,7 +142,7 @@ export const Settings: React.FC = () => {
       {/* 2. DATA PREFERENCES */}
       <GlassCard tier={2} className="p-6 sm:p-8 space-y-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-[12px] bg-gold-fill border border-gold-border flex items-center justify-center">
+          <div className="w-10 h-10 rounded-[12px] bg-gold-fill border border-gold-border flex items-center justify-center shrink-0">
             <Sliders size={20} strokeWidth={1.5} className="text-gold-base" />
           </div>
           <div>
@@ -199,10 +181,10 @@ export const Settings: React.FC = () => {
             >
               <span
                 className={cn(
-                  'absolute top-0.5 w-5 h-5 rounded-full transition-transform duration-200',
+                  'absolute left-[3px] top-[3px] w-5 h-5 rounded-full transition-transform duration-200',
                   preferences.marketDataEnabled
-                    ? 'translate-x-6 bg-bg-base-0'
-                    : 'translate-x-1 bg-text-secondary'
+                    ? 'translate-x-5 bg-bg-base-0'
+                    : 'translate-x-0 bg-text-secondary'
                 )}
               />
             </button>
@@ -267,31 +249,13 @@ export const Settings: React.FC = () => {
               ))}
             </div>
           </div>
-
-          {/* Optional Personal Alpha Vantage API Key */}
-          <div className="pt-5 space-y-3">
-            <div className="flex flex-col sm:flex-row sm:items-end gap-3">
-              <div className="flex-1">
-                <Input
-                  label="Optional Alpha Vantage API Key (Free Tier)"
-                  placeholder="Leave blank to use built-in demo / fallback feed"
-                  value={avKey}
-                  onChange={(e) => setAvKey(e.target.value)}
-                  leftIcon={<KeyRound size={16} strokeWidth={1.5} />}
-                />
-              </div>
-              <Button variant="secondary" size="md" onClick={handleSaveApiKey}>
-                Save Key
-              </Button>
-            </div>
-          </div>
         </div>
       </GlassCard>
 
       {/* 3. YOUR SAVED PROGRESS */}
       <GlassCard tier={2} className="p-6 sm:p-8 space-y-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-[12px] bg-gold-fill border border-gold-border flex items-center justify-center">
+          <div className="w-10 h-10 rounded-[12px] bg-gold-fill border border-gold-border flex items-center justify-center shrink-0">
             <Database size={20} strokeWidth={1.5} className="text-gold-base" />
           </div>
           <div>
@@ -353,7 +317,7 @@ export const Settings: React.FC = () => {
       {/* 4. ABOUT STOXIQ */}
       <GlassCard tier={2} className="p-6 sm:p-8 space-y-5">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-[12px] bg-gold-fill border border-gold-border flex items-center justify-center">
+          <div className="w-10 h-10 rounded-[12px] bg-gold-fill border border-gold-border flex items-center justify-center shrink-0">
             <Info size={20} strokeWidth={1.5} className="text-gold-base" />
           </div>
           <div>
@@ -387,16 +351,15 @@ export const Settings: React.FC = () => {
         </div>
       </GlassCard>
 
-      {/* RESET CONFIRMATION MODAL (Glass Tier 3 Overlay) */}
+      {/* RESET CONFIRMATION MODAL */}
       {resetModalOpen && (
         <div
           onClick={() => setResetModalOpen(false)}
-          className="fixed inset-0 z-50 bg-[#0A0A0F]/80 backdrop-blur-xs flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-[#0A0A0F]/85 backdrop-blur-sm flex items-center justify-center p-4"
         >
-          <GlassCard
-            tier={3}
+          <div
             onClick={(e) => e.stopPropagation()}
-            className="max-w-md w-full p-7 sm:p-8 space-y-5 animate-page-in"
+            className="glass-overlay-surface rounded-[24px] max-w-md w-full p-7 sm:p-8 space-y-5 animate-page-in"
           >
             <div className="w-12 h-12 rounded-full bg-warning-dim border border-[rgba(245,158,11,0.35)] flex items-center justify-center">
               <AlertTriangle size={24} strokeWidth={1.5} className="text-warning" />
@@ -420,7 +383,6 @@ export const Settings: React.FC = () => {
                 type="button"
                 onClick={() => {
                   resetAllProgress()
-                  setAvKey('')
                   setResetModalOpen(false)
                   showToast('All StoxIQ progress and preferences have been reset.')
                 }}
@@ -429,7 +391,7 @@ export const Settings: React.FC = () => {
                 Yes, Reset Everything
               </button>
             </div>
-          </GlassCard>
+          </div>
         </div>
       )}
     </div>

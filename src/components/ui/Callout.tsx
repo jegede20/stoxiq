@@ -87,7 +87,7 @@ export const KeyTermPill: React.FC<KeyTermPillProps> = ({ term, definition, chil
       {open && (
         <span
           role="tooltip"
-          className="absolute z-40 bottom-full left-1/2 -translate-x-1/2 mb-2 w-[260px] glass-tier-3 !rounded-[14px] p-3.5 text-left pointer-events-none shadow-glass-3 border border-[rgba(201,168,76,0.30)]"
+          className="absolute z-40 bottom-full left-1/2 -translate-x-1/2 mb-2 w-[260px] glass-overlay-surface rounded-[14px] p-3.5 text-left pointer-events-none shadow-glass-3 !border-[rgba(201,168,76,0.32)]"
         >
           <span className="block font-sans text-[10px] font-bold uppercase tracking-[1.6px] text-gold-base mb-1">
             {term}

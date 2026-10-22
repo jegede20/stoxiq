@@ -491,7 +491,6 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       localStorage.removeItem('stoxiq_region')
       localStorage.removeItem('stoxiq_preferences')
       localStorage.removeItem('stoxiq_meta')
-      localStorage.removeItem('stoxiq_av_key')
       sessionStorage.clear()
     } catch {
       // ignore

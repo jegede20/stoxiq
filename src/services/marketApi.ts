@@ -359,10 +359,7 @@ export async function fetchMarketSnapshot(enabled: boolean = true): Promise<Mark
     // ignore storage read issues
   }
 
-  const customKey =
-    (typeof window !== 'undefined' && localStorage.getItem('stoxiq_av_key')) ||
-    import.meta.env.VITE_ALPHA_VANTAGE_KEY ||
-    'demo'
+  const customKey = import.meta.env.VITE_ALPHA_VANTAGE_KEY || 'demo'
 
   try {
     const controller = new AbortController()

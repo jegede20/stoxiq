@@ -28,7 +28,7 @@ export const TopBar: React.FC<TopBarProps> = ({ onToggleSidebar }) => {
   const completedCount = getCompletedLessonsCount()
 
   return (
-    <header className="fixed top-0 left-0 right-0 lg:left-[260px] z-30 h-[64px] glass-tier-2 !rounded-none border-t-0 border-x-0 border-b border-[rgba(255,255,255,0.08)] px-4 sm:px-6 flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 lg:left-[260px] z-40 h-[64px] glass-chrome-bar border-b border-[rgba(255,255,255,0.09)] px-4 sm:px-6 flex items-center justify-between">
       {/* Left: Mobile/Tablet Logo + Tablet Sidebar Toggle */}
       <div className="flex items-center gap-3">
         {onToggleSidebar && (

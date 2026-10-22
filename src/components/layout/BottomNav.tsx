@@ -34,12 +34,12 @@ export const BottomNav: React.FC = () => {
     <>
       {moreOpen && (
         <div
-          className="fixed inset-0 z-40 bg-[#0A0A0F]/75 backdrop-blur-xs md:hidden flex items-end"
+          className="fixed inset-0 z-40 bg-[#0A0A0F]/85 backdrop-blur-sm md:hidden flex items-end"
           onClick={() => setMoreOpen(false)}
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="w-full glass-tier-3 !rounded-b-none !rounded-t-[24px] p-6 pb-24 border-b-0 space-y-3 animate-page-in"
+            className="w-full glass-overlay-surface rounded-t-[24px] p-6 pb-24 border-b-0 space-y-3 animate-page-in"
           >
             <div className="flex items-center justify-between mb-2">
               <span className="font-sans text-[11px] font-bold uppercase tracking-[2px] text-gold-base">
@@ -98,7 +98,7 @@ export const BottomNav: React.FC = () => {
 
       <nav
         aria-label="Mobile navigation"
-        className="fixed bottom-0 left-0 right-0 z-50 h-[64px] glass-tier-2 !rounded-none border-b-0 border-x-0 border-t border-[rgba(255,255,255,0.08)] md:hidden grid grid-cols-5 items-center px-2"
+        className="fixed bottom-0 left-0 right-0 z-50 min-h-[64px] pb-[env(safe-area-inset-bottom)] glass-chrome-bar border-t border-[rgba(255,255,255,0.10)] md:hidden grid grid-cols-5 items-center px-2"
       >
         {mainItems.map(({ label, to, Icon, active }) => (
           <Link
@@ -106,7 +106,7 @@ export const BottomNav: React.FC = () => {
             to={to}
             onClick={() => setMoreOpen(false)}
             className={cn(
-              'flex flex-col items-center justify-center h-full gap-1 transition-colors',
+              'flex flex-col items-center justify-center h-[64px] gap-1 transition-colors',
               active ? 'text-gold-base' : 'text-text-tertiary hover:text-text-secondary'
             )}
           >
@@ -125,7 +125,7 @@ export const BottomNav: React.FC = () => {
           type="button"
           onClick={() => setMoreOpen((o) => !o)}
           className={cn(
-            'flex flex-col items-center justify-center h-full gap-1 transition-colors',
+            'flex flex-col items-center justify-center h-[64px] gap-1 transition-colors',
             isMoreRoute || moreOpen
               ? 'text-gold-base'
               : 'text-text-tertiary hover:text-text-secondary'

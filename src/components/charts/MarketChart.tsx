@@ -32,7 +32,7 @@ const GlassChartTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) =>
   const positive = pt.pctFromOpen >= 0
 
   return (
-    <div className="glass-tier-3 !rounded-[14px] px-4 py-3 border border-[rgba(201,168,76,0.32)] shadow-glass-3">
+    <div className="glass-overlay-surface rounded-[14px] px-4 py-3 !border-[rgba(201,168,76,0.32)] shadow-glass-3">
       <div className="font-sans text-[10px] font-bold uppercase tracking-[1.6px] text-text-accent mb-1">
         {pt.date}
       </div>
